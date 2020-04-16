@@ -2,8 +2,6 @@
 
 一款简易邮箱App。
 
-
-
 ## Document
 
 [TAPD(需登录)](https://www.tapd.cn/55280682/documents/file_list)
@@ -11,6 +9,7 @@
 
 
 ## Development
+(科学上网依然很慢
 
 ### For MacOS
 
@@ -66,9 +65,6 @@
 
 ## API
 
-http://yapi.wghtstudio.cn/
+[Yapi](http://yapi.wghtstudio.cn/)
 
-
-
-## 
 
