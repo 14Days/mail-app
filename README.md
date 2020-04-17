@@ -61,6 +61,33 @@
 
    `export PATH=$PATH:$GRADLE_USER_HOME/bin`
 
+3. gradle自动安装失败
+   在`android/build.gradle`中配置镜像源，如下
+   
+   ```diff
+   buildscript {
+       ext {
+           buildToolsVersion = "28.0.3"
+           minSdkVersion = 16
+           compileSdkVersion = 28
+           targetSdkVersion = 28
+       }
+       repositories {
+   +        maven { url 'https://maven.aliyun.com/repository/google'}
+   +        maven { url 'https://maven.aliyun.com/repository/jcenter'}
+   +        maven { url 'https://maven.aliyun.com/repository/public'}
+       }
+   - 			 // remove other repo
+       dependencies {
+           classpath("com.android.tools.build:gradle:3.5.2")
+   
+           // NOTE: Do not place your application dependencies here; they belong
+           // in the individual module build.gradle files
+       }
+   }
+   ```
+   
+4. **建议使用`flutter`**
 
 
 ## API
