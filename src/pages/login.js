@@ -1,24 +1,21 @@
 import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
-import {connect} from 'react-redux';
 
-const Main = (props) => {
+const Login = (props) => {
   return (
-    <>
+    <View>
+      <Text>sd</Text>
       <TouchableOpacity
         onPress={() => {
-          console.log(props);
-          props.dispatch({
-            type: 'main/increase',
-          });
+          console.log(props.navigation);
           props.navigation.navigate('Login');
         }}>
         <View>
           <Text>count1:{props.count}</Text>
         </View>
       </TouchableOpacity>
-    </>
+    </View>
   );
 };
 
-export default connect((state) => state.main)(Main);
+export default Login;
