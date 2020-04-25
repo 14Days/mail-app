@@ -13,6 +13,11 @@ import Write from './src/pages/write';
 import inboxIcon from './src/static/inbox.png';
 import mineIcon from './src/static/mine.png';
 
+const Stack = createStackNavigator();
+const LoginStack = createStackNavigator();
+const MainStack = createStackNavigator();
+const Tab = createBottomTabNavigator();
+
 const App = () => {
   return (
     <NavigationContainer>
@@ -35,11 +40,6 @@ const App = () => {
     </NavigationContainer>
   );
 };
-
-const Stack = createStackNavigator();
-const LoginStack = createStackNavigator();
-const MainStack = createStackNavigator();
-const Tab = createBottomTabNavigator();
 
 const LoginStackComp = () => {
   return (

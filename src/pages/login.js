@@ -58,7 +58,7 @@ const Login = ({navigation}) => {
             navigation.dispatch(StackActions.replace('Tab'));
           }}
           style={styles.btn}>
-          <Text style={{fontSize: 16}}>登陆</Text>
+          <Text style={{fontSize: 16, color: '#333'}}>登陆</Text>
         </TouchableOpacity>
 
         {/*注册按钮*/}
