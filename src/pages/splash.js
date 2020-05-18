@@ -5,7 +5,7 @@ import {StackActions} from '@react-navigation/native';
 const Splash = ({navigation}) => {
   setTimeout(() => {
     navigation.dispatch(StackActions.replace('Login'));
-  }, 3000);
+  }, 300);
   return (
     <>
       <Text>广告位招租</Text>

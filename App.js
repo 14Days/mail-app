@@ -10,6 +10,8 @@ import Inbox from './src/pages/inbox';
 import Send from './src/pages/send';
 import Mine from './src/pages/mine';
 import Write from './src/pages/write';
+import Detail from './src/pages/detail';
+
 import inboxIcon from './src/static/inbox.png';
 import mineIcon from './src/static/mine.png';
 
@@ -83,6 +85,17 @@ const MainStackComp = () => {
         component={Inbox}
         options={{
           title: '收件箱',
+          headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }}
+      />
+      <MainStack.Screen
+        name="Detail"
+        component={Detail}
+        options={{
+          title: '邮件详情',
           headerTitleAlign: 'center',
           headerTitleStyle: {
             fontWeight: 'bold',
