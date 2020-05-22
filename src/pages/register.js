@@ -1,7 +1,4 @@
-import React, {Fragment, useState} from 'react';
-import {StackActions} from '@react-navigation/native';
-import {connect} from 'react-redux';
-
+import React, {useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -9,27 +6,47 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
+import {connect} from 'react-redux';
 
-const Login = ({navigation, dispatch, ...other}) => {
+const Register = ({navigation, dispatch}) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [checkPassword, setCheckPassword] = useState('');
+  const commitRegister = () => {
+    if (username === '') {
+      alert('用户名为空');
+    } else if (password === '' || checkPassword === '') {
+      alert('密码为空');
+    } else if (password !== checkPassword) {
+      alert('密码不一致');
+    } else {
+      dispatch({
+        type: 'user/handleRegister',
+        payload: {
+          username,
+          password,
+          successAction: () => {
+            navigation.pop();
+          },
+        },
+      });
+    }
+  };
   return (
-    <Fragment>
+    <>
       <View style={styles.main}>
         {/*标题文字*/}
         <View style={styles.title}>
-          <Text style={styles.titleText}>邮箱登录</Text>
+          <Text style={styles.titleText}>注册账号</Text>
         </View>
         {/*登陆框*/}
         <View style={styles.signIn}>
           <View style={styles.User}>
             <TextInput
               style={styles.Input}
-              maxLength={18}
-              username={true}
-              placeholder="example@host.com"
+              placeholder="请输入账号"
               autoCapitalize={'none'}
-              textContentType={'username'}
+              maxLength={15}
               onChangeText={(text) => {
                 setUsername(text);
               }}
@@ -38,51 +55,45 @@ const Login = ({navigation, dispatch, ...other}) => {
           <View style={styles.Pwd}>
             <TextInput
               style={styles.Input}
-              placeholder="password"
+              placeholder="请输入密码"
               textContentType={'password'}
               autoCapitalize={'none'}
               secureTextEntry={true}
+              maxLength={16}
               onChangeText={(text) => {
                 setPassword(text);
               }}
             />
           </View>
+          <View style={styles.User}>
+            <TextInput
+              style={styles.Input}
+              placeholder="重新输入密码"
+              textContentType={'password'}
+              autoCapitalize={'none'}
+              secureTextEntry={true}
+              maxLength={10}
+              onChangeText={(text) => {
+                setCheckPassword(text);
+              }}
+            />
+          </View>
         </View>
 
-        {/*登陆按钮*/}
-        <TouchableOpacity
-          onPress={() => {
-            if (username === '') {
-              alert('请输入用户名');
-            } else if (password === '') {
-              alert('请输入密码');
-            } else {
-              dispatch({
-                type: 'user/handleLogin',
-                payload: {
-                  username,
-                  password,
-                  loginSuccessAction: () => {
-                    navigation.dispatch(StackActions.replace('Tab'));
-                  },
-                },
-              });
-            }
-          }}
-          style={styles.btn}>
-          <Text style={{fontSize: 16, color: '#333'}}>登陆</Text>
+        {/*注册*/}
+        <TouchableOpacity style={styles.btn} onPress={commitRegister}>
+          <Text style={{fontSize: 16}}>注册</Text>
         </TouchableOpacity>
 
-        {/*注册按钮*/}
         <TouchableOpacity
-          style={styles.regist}
+          style={styles.btn}
           onPress={() => {
-            navigation.navigate('Register');
+            navigation.pop();
           }}>
-          <Text style={{fontSize: 10}}>>> 没有账号？注册一个 >></Text>
+          <Text style={{fontSize: 16}}>返回</Text>
         </TouchableOpacity>
       </View>
-    </Fragment>
+    </>
   );
 };
 
@@ -106,7 +117,7 @@ const styles = StyleSheet.create({
   signIn: {
     backgroundColor: '#EDEDED',
     width: 300,
-    height: 100,
+    height: 150,
     marginLeft: 'auto',
     marginRight: 'auto',
     marginTop: 50,
@@ -120,11 +131,15 @@ const styles = StyleSheet.create({
   },
   User: {
     flex: 1,
+    flexDirection: 'row',
     borderColor: '#D4D4D4',
-    borderBottomWidth: 1,
+    alignItems: 'center',
   },
   Pwd: {
     flex: 1,
+    borderColor: '#D4D4D4',
+    borderBottomWidth: 1,
+    borderTopWidth: 1,
   },
   btn: {
     display: 'flex',
@@ -138,18 +153,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  regist: {
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    marginTop: 15,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  btmText: {
-    color: '#B0B0B0',
-    fontSize: 10,
-    lineHeight: 20,
-  },
 });
 
-export default connect((state) => state.user)(Login);
+export default connect((state) => state.user)(Register);

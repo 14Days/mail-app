@@ -1,11 +1,37 @@
 import React from 'react';
 import {Text} from 'react-native';
 import {StackActions} from '@react-navigation/native';
+import AsyncStorage from '@react-native-community/async-storage';
+import dayjs from 'dayjs';
+import {connect} from 'react-redux';
 
-const Splash = ({navigation}) => {
-  setTimeout(() => {
-    navigation.dispatch(StackActions.replace('Login'));
-  }, 300);
+import {printAllItem} from '../utils/index';
+
+const Splash = ({navigation, dispatch}) => {
+  // printAllItem();
+  // AsyncStorage.getAllKeys().then(res => {console.log(res)})
+  AsyncStorage.getItem('expired_time').then(
+    (time) => {
+      const expired = dayjs(time);
+      const now = dayjs();
+      if (now.isBefore(expired)) {
+        setTimeout(() => {
+          navigation.dispatch(StackActions.replace('Tab'));
+        }, 30);
+        dispatch({
+          type: 'user/handleLoginedStart',
+        });
+      } else {
+        setTimeout(() => {
+          navigation.dispatch(StackActions.replace('Login'));
+        }, 30);
+      }
+    },
+    (err) => {
+      console.log(err);
+    },
+  );
+
   return (
     <>
       <Text>广告位招租</Text>
@@ -14,4 +40,4 @@ const Splash = ({navigation}) => {
   );
 };
 
-export default Splash;
+export default connect((state) => state.user)(Splash);

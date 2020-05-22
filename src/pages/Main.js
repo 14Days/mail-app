@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Image, StyleSheet, TouchableOpacity} from 'react-native';
 import {connect} from 'react-redux';
+import AsyncStorage from '@react-native-community/async-storage';
 import ManuList from '../components/manuList';
 import inboxIcon from '../static/inbox.png';
 import sendIcon from '../static/send.png';
@@ -28,7 +29,7 @@ const Main = (props) => {
       title: '草稿箱',
       icon: tempIcon,
       press: () => {
-        props.navigation.navigate('Inbox');
+        props.navigation.navigate('Draft');
       },
     },
   ];

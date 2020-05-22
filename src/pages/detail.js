@@ -15,7 +15,6 @@ const Detail = (props) => {
   const {route, mails} = props;
   const {index} = route.params;
   const mail = mails[index];
-  console.log(mail);
   return (
     <>
       <ScrollView style={{backgroundColor: 'white'}}>

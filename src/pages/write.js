@@ -1,26 +1,88 @@
-import React, {useState} from 'react';
-import {View, Text, TextInput, StyleSheet} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  ScrollView,
+  Image,
+} from 'react-native';
+import {connect} from 'react-redux';
+import sendIcon from '../static/send.png';
+import saveLocalIcon from '../static/savelocal.png';
 
-const Write = () => {
-  const [sender, setSender] = useState('');
-  const [copy, setCopy] = useState('');
-  const [title, setTitle] = useState('');
-
+const Write = (props) => {
+  console.log(props.route.params);
+  const fromDraft = props.route.params !== undefined;
+  const {params} = props.route;
+  const [receiver, setReceiver] = useState(fromDraft ? params.receiver : '');
+  const [copy, setCopy] = useState(fromDraft ? params.copy : '');
+  const [subject, setSubject] = useState(fromDraft ? params.subject : '');
+  const [content, setContent] = useState(fromDraft ? params.content : '');
+  const clear = () => {
+    setContent('');
+    setCopy('');
+    setSubject('');
+    setReceiver('');
+  };
   return (
     <>
-      <HeaderText title="收件人" value={sender} setter={setSender} />
-      <HeaderText title="抄送" value={copy} setter={setCopy} />
-      <HeaderText title="主题" value={title} setter={setTitle} />
-      <TextInput
-        multiline={true}
-        autoFocus={true}
-        style={{
-          backgroundColor: 'white',
-          height: '100%',
-          textAlignVertical: 'top',
-          paddingHorizontal: 30,
-        }}
-      />
+      <ScrollView>
+        <HeaderText title="收件人" value={receiver} setter={setReceiver} />
+        <HeaderText title="抄送" value={copy} setter={setCopy} />
+        <HeaderText title="主题" value={subject} setter={setSubject} />
+
+        <KeyboardAvoidingView>
+          <TextInput
+            multiline={true}
+            style={{
+              backgroundColor: 'white',
+              height: 500,
+              textAlignVertical: 'top',
+              paddingHorizontal: 30,
+              paddingTop: 20,
+            }}
+            value={content}
+            onChangeText={(text) => {
+              setContent(text);
+            }}
+          />
+        </KeyboardAvoidingView>
+      </ScrollView>
+      <View style={{backgroundColor: 'white'}}>
+        {receiver && subject ? (
+          <TouchableOpacity style={styles.send}>
+            <Image source={sendIcon} style={styles.btnIcon} />
+          </TouchableOpacity>
+        ) : null}
+        {receiver && subject ? (
+          <TouchableOpacity
+            style={styles.save}
+            onPress={() => {
+              props.dispatch({
+                type: 'mail/handleUpdateDraft',
+                payload: {
+                  data: {
+                    receiver,
+                    copy,
+                    content,
+                    subject,
+                    key: fromDraft ? params.key : undefined,
+                  },
+                  successAction: () => {
+                    clear();
+                    alert('已将内容保存至草稿箱!');
+                    props.navigation.pop();
+                  },
+                },
+              });
+            }}>
+            <Image source={saveLocalIcon} style={styles.btnIcon} />
+          </TouchableOpacity>
+        ) : null}
+      </View>
     </>
   );
 };
@@ -39,9 +101,10 @@ const HeaderText = ({title, value, setter}) => {
           borderBottomWidth: 1,
           display: 'flex',
           flexDirection: 'row',
+          // paddingRight: title === '收件人' ? 60 : 0,
         }}>
         <Text
-          style={{flex: 0.2, lineHeight: 50, color: '#aaa', marginLeft: 10}}>
+          style={{flex: 0.2, lineHeight: 50, color: '#aaa', paddingLeft: 10}}>
           {title}
         </Text>
         <TextInput
@@ -60,9 +123,30 @@ const HeaderText = ({title, value, setter}) => {
 };
 
 const styles = StyleSheet.create({
-  line: {
-    flex: 0.8,
+  send: {
+    backgroundColor: 'white',
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    position: 'absolute',
+    right: 40,
+    bottom: 0,
+  },
+  save: {
+    backgroundColor: 'white',
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    left: 40,
+    bottom: 0,
+  },
+  btnIcon: {
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    width: 24,
+    height: 24,
+    marginVertical: 13,
   },
 });
 
-export default Write;
+export default connect((state) => state.mail)(Write);

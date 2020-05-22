@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {TouchableOpacity, Image, Text, StyleSheet, View} from 'react-native';
 import Mail from '../components/mail';
-import unreadIcon from '../static/unread.png';
 import mutilcheckIcon from '../static/multicheck.png';
 import deleteIcon from '../static/delete.png';
 
@@ -11,12 +10,12 @@ const Inbox = (props) => {
   return (
     <>
       <View style={styles.btnArea}>
-        <TouchableOpacity style={styles.unreadBtn}>
+        {/* <TouchableOpacity style={styles.unreadBtn}>
           <Text style={styles.center}>
             <Image source={unreadIcon} style={styles.icon} />
             <Text style={styles.topText}>查看未读</Text>
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <TouchableOpacity
           style={styles.unreadBtn}
           onPress={() => {
@@ -66,7 +65,7 @@ const styles = StyleSheet.create({
   unreadBtn: {
     display: 'flex',
     flexDirection: 'row',
-    flex: 0.5,
+    flex: 1,
   },
   center: {
     marginLeft: 'auto',

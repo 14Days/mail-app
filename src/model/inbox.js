@@ -34,7 +34,6 @@ export default {
       const {mails} = state;
       mails[index].check = !mails[index].check;
       const ret = JSON.parse(JSON.stringify(state));
-      console.log(ret);
       return ret;
     },
     switchMulticheck(state, _) {
@@ -48,7 +47,6 @@ export default {
           multicheck: !multicheck,
         }),
       );
-      console.log(ret);
       return ret;
     },
   },
