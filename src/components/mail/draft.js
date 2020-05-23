@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import {connect} from 'react-redux';
+import {flatContent} from '../../utils/mail';
 
 const Draft = ({data, dispatch, multicheck, navigate}) => {
   const {check, receiver, copy, content, subject, key} = data;
@@ -22,9 +23,7 @@ const Draft = ({data, dispatch, multicheck, navigate}) => {
       <HeaderText title="收件人" value={receiver} />
       <HeaderText title="抄送" value={copy} />
       <HeaderText title="主题" value={subject} />
-      <Text style={{lineHeight: 40}}>
-        {content.length > 25 ? `${content.slice(0, 25)}...` : content}
-      </Text>
+      <Text style={{lineHeight: 40}}>{flatContent(content, 25)}</Text>
     </TouchableOpacity>
   );
 };

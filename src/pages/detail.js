@@ -12,34 +12,43 @@ import replyIcon from '../static/reply.png';
 import deleteIcon from '../static/delete.png';
 
 const Detail = (props) => {
-  const {route, mails} = props;
-  const {index} = route.params;
-  const mail = mails[index];
+  const {route, mails, mymails} = props;
+  const {index, send} = route.params;
+  let mail;
+  if (send) mail = mymails[index];
+  else mail = mails[index];
   return (
     <>
       <ScrollView style={{backgroundColor: 'white'}}>
         <View style={styles.header}>
           <Text style={styles.title}>{mail.title}</Text>
-          <Text>发送：{mail.from}</Text>
-          <Text>时间：{mail.date}</Text>
+          <Text>发送：{`${mail.from_user}(${mail.from_addr})`}</Text>
+          <Text>时间：{mail.time}</Text>
         </View>
         <View style={styles.body}>
           <Text>{mail.content}</Text>
         </View>
       </ScrollView>
       <View style={styles.btnArea}>
-        <TouchableOpacity style={styles.unreadBtn}>
-          <Text style={styles.center}>
-            <Image source={deleteIcon} style={styles.icon} />
-          </Text>
-        </TouchableOpacity>
         <TouchableOpacity
           style={styles.unreadBtn}
           onPress={() => {
             props.dispatch({
-              type: 'inbox/switchMulticheck',
+              type: `inbox/handleDeleteOne${send ? 'My' : ''}`,
+              payload: {
+                id: mail.mail_id,
+                index,
+                successAction: () => {
+                  props.navigation.pop();
+                },
+              },
             });
           }}>
+          <Text style={styles.center}>
+            <Image source={deleteIcon} style={styles.icon} />
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.unreadBtn} onPress={() => {}}>
           <Text style={styles.center}>
             <Image source={replyIcon} style={styles.icon} />
           </Text>

@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import {connect} from 'react-redux';
-
+import {flatContent} from '../../utils/mail';
 const Mail = (props) => {
   const {
     index,
@@ -13,19 +13,21 @@ const Mail = (props) => {
     check,
     dispatch,
     multicheck,
+    mymulticheck,
+    send,
   } = props;
   return (
     <TouchableOpacity
       onPress={() => {
-        if (multicheck) {
+        if (send ? mymulticheck : multicheck) {
           dispatch({
-            type: 'inbox/check',
+            type: `inbox/check${send ? 'My' : ''}`,
             payload: {
               index,
             },
           });
         } else {
-          props.navigate('Detail', {index});
+          props.navigate('Detail', {index, send});
         }
       }}>
       <View style={check ? styles.checkContainer : styles.container}>
@@ -42,9 +44,7 @@ const Mail = (props) => {
               <Text style={styles.date}>{`${date}>`}</Text>
             </View>
           </View>
-          <Text>
-            {content.length <= 20 ? content : `${content.slice(0, 40)}...`}
-          </Text>
+          <Text>{flatContent(content, 40)}</Text>
         </View>
       </View>
     </TouchableOpacity>

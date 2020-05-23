@@ -10,3 +10,9 @@ export const registerURL = `${baseURL}register`;
 
 /* 获取用户信息 */
 export const userInfoURL = `${baseURL}user`;
+
+/* 接收邮件 */
+export const receiveURL = `${baseURL}mail/receive`;
+
+/* 发送邮件 */
+export const sendURL = `${baseURL}mail/send`;

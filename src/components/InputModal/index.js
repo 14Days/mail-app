@@ -27,7 +27,7 @@ const InputModal = ({inputList, visible, flip, commit, children}) => {
           {children}
           <View style={styles.option}>
             <QButton
-              title="确认修改"
+              title="提交"
               press={commit}
               style={styles.btn}
               textStyle={styles.btnText}

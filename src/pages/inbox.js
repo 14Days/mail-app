@@ -1,56 +1,82 @@
 import React, {useState} from 'react';
-import {TouchableOpacity, Image, Text, StyleSheet, View} from 'react-native';
+import {
+  TouchableOpacity,
+  Image,
+  Text,
+  StyleSheet,
+  View,
+  ScrollView,
+} from 'react-native';
 import Mail from '../components/mail';
 import mutilcheckIcon from '../static/multicheck.png';
 import deleteIcon from '../static/delete.png';
 
 import {connect} from 'react-redux';
 
-const Inbox = (props) => {
-  return (
-    <>
-      <View style={styles.btnArea}>
-        {/* <TouchableOpacity style={styles.unreadBtn}>
-          <Text style={styles.center}>
-            <Image source={unreadIcon} style={styles.icon} />
-            <Text style={styles.topText}>查看未读</Text>
-          </Text>
-        </TouchableOpacity> */}
-        <TouchableOpacity
-          style={styles.unreadBtn}
-          onPress={() => {
-            props.dispatch({
-              type: 'inbox/switchMulticheck',
-            });
-          }}>
-          <Text style={styles.center}>
-            <Image source={mutilcheckIcon} style={styles.icon} />
-            <Text style={styles.topText}>
-              {props.multicheck ? '取消多选' : '多选'}
+class Inbox extends React.Component {
+  componentDidMount() {
+    this.props.dispatch({
+      type: 'inbox/handleInitMail',
+    });
+    console.log(this.props);
+  }
+  render() {
+    const {props} = this;
+    return (
+      <>
+        <View style={styles.btnArea}>
+          {/* <TouchableOpacity style={styles.unreadBtn}>
+            <Text style={styles.center}>
+              <Image source={unreadIcon} style={styles.icon} />
+              <Text style={styles.topText}>查看未读</Text>
             </Text>
-          </Text>
-        </TouchableOpacity>
-      </View>
-      {props.mails.map((mail, index) => (
-        <Mail
-          title={mail.title}
-          date={mail.date}
-          from={mail.from}
-          content={mail.content}
-          key={index}
-          index={index}
-          check={mail.check}
-          navigate={props.navigation.navigate}
-        />
-      ))}
-      {props.multicheck ? (
-        <TouchableOpacity style={styles.delete}>
-          <Image source={deleteIcon} style={styles.deleteIcon} />
-        </TouchableOpacity>
-      ) : undefined}
-    </>
-  );
-};
+          </TouchableOpacity> */}
+          <TouchableOpacity
+            style={styles.unreadBtn}
+            onPress={() => {
+              props.dispatch({
+                type: 'inbox/switchMulticheck',
+              });
+              console.log(props);
+            }}>
+            <Text style={styles.center}>
+              <Image source={mutilcheckIcon} style={styles.icon} />
+              <Text style={styles.topText}>
+                {props.multicheck ? '取消多选' : '多选'}
+              </Text>
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <ScrollView>
+          {props.mails.map((mail, index) => (
+            <Mail
+              title={mail.title}
+              date={mail.time}
+              from={mail.from_user}
+              content={mail.content}
+              key={index}
+              index={index}
+              check={mail.check}
+              navigate={props.navigation.navigate}
+              send={false}
+            />
+          ))}
+        </ScrollView>
+        {props.multicheck ? (
+          <TouchableOpacity
+            style={styles.delete}
+            onPress={() => {
+              props.dispatch({
+                type: 'inbox/handleDelete',
+              });
+            }}>
+            <Image source={deleteIcon} style={styles.deleteIcon} />
+          </TouchableOpacity>
+        ) : undefined}
+      </>
+    );
+  }
+}
 
 const styles = StyleSheet.create({
   btnArea: {

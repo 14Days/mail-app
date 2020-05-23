@@ -1,8 +1,7 @@
 import AsyncStorage from '@react-native-community/async-storage';
 
-export const combineReceiver = (receiver, copy) => {
-  return [receiver, copy.split(';')];
-};
+export const flatContent = (content, len) =>
+  content.replace(/\s/g, '').slice(0, len);
 
 export const saveDraftStorage = async (
   receiver,

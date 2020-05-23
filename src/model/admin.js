@@ -13,24 +13,38 @@ export default {
         ...payload,
       };
     },
-    check(state, {payload: {checkIndex}}) {
+    check(state, {payload: {checkIndex: index}}) {
+      const {checkIndex} = state;
       return {
         ...state,
-        checkIndex,
+        checkIndex: index === checkIndex ? -1 : index,
       };
     },
-    delete(state, {payload: {id}}) {
-      const {userList} = state;
-      for (let i = 0; i < userList.length; i++) {
-        if (userList[i].id === id) {
-          userList.splice(i, 1);
-          break;
-        }
-      }
-      const ret = JSON.parse(JSON.stringify(userList));
+    delete(state, _) {
+      const {checkIndex, userList} = state;
+      userList.splice(checkIndex, 1);
       return {
         ...state,
-        userList: ret,
+        userList: JSON.parse(JSON.stringify(userList)),
+        checkIndex: -1,
+      };
+    },
+    grant(state, _) {
+      const {checkIndex, userList} = state;
+      userList[checkIndex].user_type =
+        (userList[checkIndex].user_type === 1) + 1;
+      return {
+        ...state,
+        userList: JSON.parse(JSON.stringify(userList)),
+      };
+    },
+    ban(state, _) {
+      const {checkIndex, userList} = state;
+      userList[checkIndex].user_type =
+        (userList[checkIndex].user_type === 2) + 2;
+      return {
+        ...state,
+        userList: JSON.parse(JSON.stringify(userList)),
       };
     },
   },
@@ -62,19 +76,61 @@ export default {
         console.log(e);
       }
     },
-    *handleDelete({payload: {id}}, {put, call}) {
+    *handleDelete(_, {put, call, select}) {
       try {
-        const {data: res} = yield call(deleteUser, id);
+        const {checkIndex, userList} = yield select((state) => state.admin);
+        const {data: res} = yield call(deleteUser, userList[checkIndex].id);
         const {code, data, msg} = res;
         if (code === 0) {
           yield put({
             type: 'delete',
-            payload: {
-              id,
-            },
           });
         }
         alert(`[${msg}] ${data}`);
+      } catch (e) {}
+    },
+    *handleGrant(_, {put, call, select}) {
+      try {
+        const {checkIndex, userList} = yield select((state) => state.admin);
+        const {user_type, id} = userList[checkIndex];
+        const to = user_type === 1 ? 2 : 1;
+        switch (user_type) {
+          case 1:
+          case 2: {
+            const {data: res} = yield call(grantAmdin, id, to);
+            alert(res.msg);
+            yield put({
+              type: 'grant',
+            });
+            break;
+          }
+          case 3: {
+            alert('该用户处于封禁中');
+            break;
+          }
+        }
+      } catch (e) {}
+    },
+    *handleBan(_, {put, call, select}) {
+      try {
+        const {checkIndex, userList} = yield select((state) => state.admin);
+        const {user_type, id} = userList[checkIndex];
+        const to = (user_type === 2) + 2;
+        switch (user_type) {
+          case 1: {
+            alert('该用户是管理员');
+            break;
+          }
+          case 2:
+          case 3: {
+            const {data: res} = yield call(grantAmdin, id, to);
+            alert(res.msg);
+            yield put({
+              type: 'ban',
+            });
+            break;
+          }
+        }
       } catch (e) {}
     },
   },

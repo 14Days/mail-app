@@ -89,14 +89,9 @@ export default {
         console.log(e);
       }
     },
-    *handleLogout(_, {put}) {
-      removeLoginItem();
-      yield put({
-        type: 'save',
-        patload: {
-          access: false,
-        },
-      });
+    *handleLogout({payload: {successAction}}, {put, call}) {
+      yield call(removeLoginItem);
+      successAction();
     },
     *handleUpdatePwd(
       {payload: {userId, username, oldpwd, newpwd, successAction}},

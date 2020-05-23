@@ -21,7 +21,7 @@ const UserInfo = (props) => {
           dispatch({
             type: 'admin/check',
             payload: {
-              checkIndex: index === checkIndex ? -1 : index,
+              checkIndex: index,
             },
           });
         }}>

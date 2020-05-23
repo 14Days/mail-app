@@ -51,8 +51,12 @@ const Mine = (props) => {
       press: () => {
         dispatch({
           type: 'user/handleLogout',
+          payload: {
+            successAction: () => {
+              navigation.dispatch(StackActions.replace('Login'));
+            },
+          },
         });
-        navigation.dispatch(StackActions.replace('Login'));
       },
     },
   ];

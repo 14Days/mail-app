@@ -17,7 +17,9 @@ const Write = (props) => {
   console.log(props.route.params);
   const fromDraft = props.route.params !== undefined;
   const {params} = props.route;
-  const [receiver, setReceiver] = useState(fromDraft ? params.receiver : '');
+  const [receiver, setReceiver] = useState(
+    props.user_type === 1 ? '发往所有用户' : fromDraft ? params.receiver : '',
+  );
   const [copy, setCopy] = useState(fromDraft ? params.copy : '');
   const [subject, setSubject] = useState(fromDraft ? params.subject : '');
   const [content, setContent] = useState(fromDraft ? params.content : '');
@@ -30,8 +32,19 @@ const Write = (props) => {
   return (
     <>
       <ScrollView>
-        <HeaderText title="收件人" value={receiver} setter={setReceiver} />
-        <HeaderText title="抄送" value={copy} setter={setCopy} />
+        <HeaderText
+          editable={props.user_type !== 1}
+          title="收件人"
+          value={receiver}
+          setter={setReceiver}
+        />
+        <HeaderText
+          editable={props.user_type !== 1}
+          title="抄送"
+          placeholder="多个用户请用';'分割"
+          value={copy}
+          setter={setCopy}
+        />
         <HeaderText title="主题" value={subject} setter={setSubject} />
 
         <KeyboardAvoidingView>
@@ -53,7 +66,23 @@ const Write = (props) => {
       </ScrollView>
       <View style={{backgroundColor: 'white'}}>
         {receiver && subject ? (
-          <TouchableOpacity style={styles.send}>
+          <TouchableOpacity
+            style={styles.send}
+            onPress={() => {
+              props.dispatch({
+                type: 'mail/handleSend',
+                payload: {
+                  subject,
+                  content,
+                  receiver,
+                  copy,
+                  successAction: () => {
+                    clear();
+                    props.navigation.pop();
+                  },
+                },
+              });
+            }}>
             <Image source={sendIcon} style={styles.btnIcon} />
           </TouchableOpacity>
         ) : null}
@@ -87,7 +116,7 @@ const Write = (props) => {
   );
 };
 
-const HeaderText = ({title, value, setter}) => {
+const HeaderText = ({title, value, setter, editable, placeholder}) => {
   return (
     <View
       style={{
@@ -112,6 +141,8 @@ const HeaderText = ({title, value, setter}) => {
             flex: 0.8,
             paddingRight: 20,
           }}
+          placeholder={placeholder}
+          editable={editable}
           value={value}
           onChangeText={(t) => {
             setter(t);
@@ -149,4 +180,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connect((state) => state.mail)(Write);
+export default connect((state) => ({
+  ...state.mail,
+  ...state.user,
+}))(Write);

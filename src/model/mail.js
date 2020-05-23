@@ -3,6 +3,7 @@ import {
   deleteDraftStorage,
   saveDraftStorage,
 } from '../utils/mail';
+import {sendMail} from '../service/mail';
 
 export default {
   namespace: 'mail',
@@ -82,6 +83,26 @@ export default {
         type: 'handleLoad',
       });
       successAction();
+    },
+    *handleSend({payload}, {put, call}) {
+      try {
+        const {receiver, copy, subject, content, successAction} = payload;
+        let receivers = [];
+        if (receivers === '发往所有用户') {
+        } else {
+          receivers.push(receiver);
+          if (copy !== '') {
+            receivers = [...receivers, ...copy.split(';')];
+            if (receivers.slice(-1)[0] === '') receivers.pop();
+          }
+        }
+        const {data} = yield call(sendMail, subject, content, receiver);
+        if (data.code !== 0) alert(data.msg);
+        else {
+          alert('发送成功');
+          successAction();
+        }
+      } catch (e) {}
     },
   },
 };
