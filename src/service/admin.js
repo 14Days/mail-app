@@ -1,10 +1,13 @@
 import Axios from 'axios';
 import {userInfoURL} from '../utils/url';
 import {withToken} from './user';
-export const getUserList = async () => {
+export const getUserList = async (page) => {
   return await withToken({
     url: userInfoURL,
     method: 'GET',
+    params: {
+      page,
+    },
   });
 };
 

@@ -7,6 +7,7 @@ import {
 } from '../service/user';
 import AsyncStorage from '@react-native-community/async-storage';
 import dayjs from 'dayjs';
+import {modelName} from './index';
 import {printAllItem, storageLoginItem, removeLoginItem} from '../utils/index';
 export default {
   namespace: 'user',
@@ -24,6 +25,17 @@ export default {
       return {
         ...state,
         ...payload,
+      };
+    },
+    clear() {
+      return {
+        access: false,
+        user_id: '',
+        user_type: '',
+        id: '',
+        nickname: '',
+        sex: '',
+        username: '',
       };
     },
   },
@@ -45,7 +57,12 @@ export default {
           /* 跳转 */
           loginSuccessAction();
           /* 保存token至本地 */
-          storageLoginItem(token, user_id, user_type, dayjs());
+          storageLoginItem(
+            token,
+            user_id,
+            user_type,
+            dayjs().add(7, 'day').toString(),
+          );
           /* 立即获取用户信息 */
           yield put({
             type: 'handleGetUserInfo',
@@ -91,6 +108,13 @@ export default {
     },
     *handleLogout({payload: {successAction}}, {put, call}) {
       yield call(removeLoginItem);
+      for (let i = 0; i < modelName.length; i++) {
+        if (modelName[i] === 'user') yield put({type: 'clear'});
+        else
+          yield put({
+            type: `${modelName[i]}/clear`,
+          });
+      }
       successAction();
     },
     *handleUpdatePwd(

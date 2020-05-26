@@ -8,6 +8,7 @@ import {
   ScrollView,
 } from 'react-native';
 import {connect} from 'react-redux';
+import TextTip from '../components/textTip';
 import InputModal from '../components/InputModal';
 import deleteIcon from '../static/delete.png';
 import grantIcon from '../static/grant.png';
@@ -74,7 +75,9 @@ class Admin extends React.Component {
         type: 'password',
       },
     ];
-    return userList.length === 0 ? null : (
+    return userList.length === 0 ? (
+      <TextTip value="请稍候" />
+    ) : (
       <>
         <InputModal
           inputList={registerList}
@@ -108,7 +111,20 @@ class Admin extends React.Component {
             }
           }}
         />
-        <ScrollView>
+        <ScrollView
+          scrollEventThrottle={true}
+          onScrollEndDrag={(e) => {
+            var offsetY = e.nativeEvent.contentOffset.y;
+            var contentSizeHeight = e.nativeEvent.contentSize.height;
+            var oriageScrollHeight = e.nativeEvent.layoutMeasurement.height;
+            if (offsetY + oriageScrollHeight >= contentSizeHeight - 10) {
+              dispatch({
+                type: 'admin/handleInit',
+              });
+              console.log(111);
+              console.log(props);
+            }
+          }}>
           <TouchableOpacity
             style={styles.addBtn}
             onPress={() => {

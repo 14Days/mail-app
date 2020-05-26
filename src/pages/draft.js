@@ -3,6 +3,7 @@ import {TouchableOpacity, Image, Text, StyleSheet, View} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import {connect} from 'react-redux';
 
+import TextTip from '../components/textTip';
 import DraftItem from '../components/mail/draft';
 import mutilcheckIcon from '../static/multicheck.png';
 import deleteIcon from '../static/delete.png';
@@ -38,6 +39,7 @@ class Draft extends React.Component {
     const props = this.props;
     console.log(props);
     const {draftList} = props;
+    console.log(Object.keys(draftList).length);
     return (
       <>
         <View style={styles.btnArea}>
@@ -62,13 +64,17 @@ class Draft extends React.Component {
             </Text>
           </TouchableOpacity>
         </View>
-        {Object.keys(draftList).map((key) => (
-          <DraftItem
-            key={key}
-            data={{...draftList[key], key}}
-            navigate={props.navigation.navigate}
-          />
-        ))}
+        {Object.keys(draftList).length === 0 ? (
+          <TextTip value="草稿箱为空" />
+        ) : (
+          Object.keys(draftList).map((key) => (
+            <DraftItem
+              key={key}
+              data={{...draftList[key], key}}
+              navigate={props.navigation.navigate}
+            />
+          ))
+        )}
         {props.multicheck ? (
           <TouchableOpacity
             style={styles.delete}

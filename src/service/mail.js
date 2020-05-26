@@ -14,6 +14,13 @@ export const mailDetail = (mail_id) => {
   });
 };
 
+export const sendMailDetail = (mail_id) => {
+  return withToken({
+    url: `${sendURL}/${mail_id}`,
+    method: 'GET',
+  });
+};
+
 export const deleteMail = (mail_id) => {
   return withToken({
     url: `${receiveURL}/${mail_id}`,

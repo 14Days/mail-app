@@ -24,16 +24,30 @@ const Login = ({navigation, dispatch, ...other}) => {
         <View style={styles.signIn}>
           <View style={styles.User}>
             <TextInput
-              style={styles.Input}
+              style={{
+                paddingLeft: 25,
+                flex: 0.5,
+                width: 300,
+                height: 50,
+              }}
               maxLength={18}
               username={true}
-              placeholder="example@host.com"
+              placeholder="username"
               autoCapitalize={'none'}
               textContentType={'username'}
               onChangeText={(text) => {
                 setUsername(text);
               }}
             />
+            <Text
+              style={{
+                flex: 0.5,
+                height: 50,
+                width: 300,
+                lineHeight: 50,
+              }}>
+              @wghtstudio.cn
+            </Text>
           </View>
           <View style={styles.Pwd}>
             <TextInput
@@ -115,13 +129,13 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   Input: {
-    flex: 1,
     marginLeft: 20,
   },
   User: {
-    flex: 1,
     borderColor: '#D4D4D4',
     borderBottomWidth: 1,
+    display: 'flex',
+    flexDirection: 'row',
   },
   Pwd: {
     flex: 1,

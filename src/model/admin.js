@@ -5,12 +5,22 @@ export default {
   state: {
     userList: [],
     checkIndex: -1,
+    nextPage: 0,
+    alerted: false,
   },
   reducers: {
     save(state, {payload}) {
       return {
         ...state,
         ...payload,
+      };
+    },
+    clear() {
+      return {
+        userList: [],
+        checkIndex: -1,
+        nextPage: 0,
+        alerted: false,
       };
     },
     check(state, {payload: {checkIndex: index}}) {
@@ -49,26 +59,48 @@ export default {
     },
   },
   effects: {
-    *handleInit(_, {put, call}) {
+    *handleInit(_, {put, call, select}) {
       try {
-        const {data: res} = yield call(getUserList);
+        const {nextPage, userList, alerted} = yield select(
+          (state) => state.admin,
+        );
+        const {data: res} = yield call(getUserList, nextPage);
         const {code, data, msg} = res;
         if (code === 0) {
-          const userList = data.res;
-          for (let i = 0; i < userList.length; i++) {
-            const {
-              data: {
-                data: {sex},
+          const {count, res: userListNew} = data;
+          if (userListNew !== 0) {
+            for (let i = 0; i < userListNew.length; i++) {
+              const {
+                data: {
+                  data: {sex},
+                },
+              } = yield call(getUserInfo, userListNew[i].id);
+              userListNew[i].sex = sex;
+            }
+            for (
+              let i = nextPage * 10, offset = 0;
+              offset < userListNew.length;
+              offset++
+            ) {
+              userList[i + offset] = userListNew[offset];
+            }
+            yield put({
+              type: 'save',
+              payload: {
+                userList: JSON.parse(JSON.stringify(userList)),
+                nextPage: userListNew.length === 10 ? nextPage + 1 : nextPage,
+                alerted: false,
               },
-            } = yield call(getUserInfo, userList[i].id);
-            userList[i].sex = sex;
+            });
+          } else if (!alerted) {
+            alert('已加载全部用户!');
+            yield put({
+              type: 'save',
+              payload: {
+                alerted: true,
+              },
+            });
           }
-          yield put({
-            type: 'save',
-            payload: {
-              userList,
-            },
-          });
         } else {
           alert(msg);
         }

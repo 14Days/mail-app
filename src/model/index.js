@@ -5,3 +5,5 @@ import mail from './mail';
 import admin from './admin';
 
 export default [main, inbox, user, mail, admin];
+
+export const modelName = ['inbox', 'user', 'mail', 'admin'];

@@ -1,6 +1,7 @@
 import {
   getMailList,
   mailDetail,
+  sendMailDetail,
   deleteMail,
   getMyMailList,
 } from '../service/mail';
@@ -18,6 +19,14 @@ export default {
       return {
         ...state,
         ...payload,
+      };
+    },
+    clear() {
+      return {
+        mails: [],
+        mymails: [],
+        multicheck: false,
+        mymulticheck: false,
       };
     },
     check(state, {payload: {index}}) {
@@ -102,7 +111,7 @@ export default {
         mymails: JSON.parse(JSON.stringify(mymails)),
       };
     },
-    deleteOne(state, {payload: index}) {
+    deleteOne(state, {payload: {index}}) {
       const {mails} = state;
       mails.splice(index, 1);
       return {
@@ -110,7 +119,7 @@ export default {
         mails: JSON.parse(JSON.stringify(mails)),
       };
     },
-    deleteOneMy(state, {payload: index}) {
+    deleteOneMy(state, {payload: {index}}) {
       const {mymails} = state;
       mymails.splice(index, 1);
       return {
@@ -150,7 +159,7 @@ export default {
         } = data;
         console.log(res);
         for (let i = 0; i < res.length; i++) {
-          const {data: detailRes} = yield call(mailDetail, res[i].mail_id);
+          const {data: detailRes} = yield call(sendMailDetail, res[i].mail_id);
           console.log(detailRes);
           res[i] = {
             ...res[i],

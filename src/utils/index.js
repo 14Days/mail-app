@@ -1,5 +1,4 @@
 import AsyncStorage from '@react-native-community/async-storage';
-
 //'#6273da',
 //'#fb6a2c',
 
@@ -19,10 +18,10 @@ export const storageLoginItem = (token, user_id, user_type, date) => {
   AsyncStorage.setItem('user_id', user_id + '');
   AsyncStorage.setItem('user_type', user_type + '');
   AsyncStorage.setItem('Authorization', token + '');
-  AsyncStorage.setItem('expired_time', date.add(7, 'day'));
+  AsyncStorage.setItem('expired_time', date);
 };
 
-export const removeLoginItem = (token, user_id, user_type, date) => {
+export const removeLoginItem = () => {
   AsyncStorage.removeItem('user_id');
   AsyncStorage.removeItem('user_type');
   AsyncStorage.removeItem('Authorization');

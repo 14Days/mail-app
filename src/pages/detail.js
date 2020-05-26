@@ -8,15 +8,19 @@ import {
   StyleSheet,
 } from 'react-native';
 import {connect} from 'react-redux';
+import {constructReply} from '../utils/mail';
 import replyIcon from '../static/reply.png';
 import deleteIcon from '../static/delete.png';
 
 const Detail = (props) => {
   const {route, mails, mymails} = props;
   const {index, send} = route.params;
+  console.log(index, send);
   let mail;
   if (send) mail = mymails[index];
   else mail = mails[index];
+  if (mail === undefined) return null;
+  console.log(mail.mail_id);
   return (
     <>
       <ScrollView style={{backgroundColor: 'white'}}>
@@ -48,11 +52,26 @@ const Detail = (props) => {
             <Image source={deleteIcon} style={styles.icon} />
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.unreadBtn} onPress={() => {}}>
-          <Text style={styles.center}>
-            <Image source={replyIcon} style={styles.icon} />
-          </Text>
-        </TouchableOpacity>
+        {props.user_type === 2 && !send ? (
+          <TouchableOpacity
+            style={styles.unreadBtn}
+            onPress={() => {
+              props.navigation.navigate('Write', {
+                receiver: mail.from_addr,
+                copy: '',
+                subject: `[Reply: ${mail.subject}]`,
+                content: constructReply(
+                  mail.from_addr,
+                  mail.subject,
+                  mail.content,
+                ),
+              });
+            }}>
+            <Text style={styles.center}>
+              <Image source={replyIcon} style={styles.icon} />
+            </Text>
+          </TouchableOpacity>
+        ) : null}
       </View>
     </>
   );
@@ -104,4 +123,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connect((state) => state.inbox)(Detail);
+export default connect((state) => ({
+  ...state.inbox,
+  ...state.user,
+}))(Detail);

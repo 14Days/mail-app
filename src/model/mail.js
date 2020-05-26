@@ -18,6 +18,12 @@ export default {
         ...payload,
       };
     },
+    clear() {
+      return {
+        draftList: {},
+        multicheck: false,
+      };
+    },
     check(state, {payload: {key}}) {
       const {draftList} = state;
       draftList[key].check = !draftList[key].check;
@@ -68,6 +74,18 @@ export default {
           delete draftList[key];
         }
       }
+      yield put({
+        type: 'save',
+        payload: {
+          draftList: JSON.parse(JSON.stringify(draftList)),
+          multicheck: false,
+        },
+      });
+    },
+    *handleDeleteOne({payload: {key}}, {put, call, select}) {
+      const {draftList} = yield select((state) => state.mail);
+      delete draftList[key];
+      yield call(deleteDraftStorage, key);
       yield put({
         type: 'save',
         payload: {

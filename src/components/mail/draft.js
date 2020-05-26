@@ -17,7 +17,12 @@ const Draft = ({data, dispatch, multicheck, navigate}) => {
             },
           });
         } else {
-          navigate('Write', data);
+          navigate('Write', {
+            ...data,
+            draft: {
+              key,
+            },
+          });
         }
       }}>
       <HeaderText title="收件人" value={receiver} />

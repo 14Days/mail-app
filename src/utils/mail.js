@@ -73,3 +73,20 @@ export const deleteDraftStorage = (id) => {
 export const readDraftStorage = async () => {
   return await AsyncStorage.getItem('draftSet');
 };
+
+export const constructReply = (from, subject, content) =>
+  `\n${'-'.repeat(60)}\n[${subject}] from ${from}\n${content}`;
+
+export const fixedReceiver = (r, setr, c, prec, setc) => {
+  if (r.indexOf('@') === -1 && r !== '') {
+    setr(`${r}@wghtstudio.cn`);
+  }
+  if (c.slice(-1) === ';' && c.length > prec.length) {
+    const s = c.split(';');
+    s.pop();
+    for (let i = 0; i < s.length; i++) {
+      if (s[i].indexOf('@') === -1) s[i] += '@wghtstudio.cn';
+    }
+    setc(`${s.join(';')};`);
+  }
+};

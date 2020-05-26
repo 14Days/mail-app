@@ -10,6 +10,7 @@ import {
   Image,
 } from 'react-native';
 import {connect} from 'react-redux';
+import {fixedReceiver} from '../utils/mail';
 import sendIcon from '../static/send.png';
 import saveLocalIcon from '../static/savelocal.png';
 
@@ -43,7 +44,10 @@ const Write = (props) => {
           title="抄送"
           placeholder="多个用户请用';'分割"
           value={copy}
-          setter={setCopy}
+          setter={(t) => {
+            setCopy(t);
+            fixedReceiver(receiver, setReceiver, t, copy, setCopy);
+          }}
         />
         <HeaderText title="主题" value={subject} setter={setSubject} />
 
@@ -79,6 +83,15 @@ const Write = (props) => {
                   successAction: () => {
                     clear();
                     props.navigation.pop();
+                    if (params && params.draft !== undefined) {
+                      const {key} = params.draft;
+                      props.dispatch({
+                        type: 'mail/handleDeleteOne',
+                        payload: {
+                          key,
+                        },
+                      });
+                    }
                   },
                 },
               });

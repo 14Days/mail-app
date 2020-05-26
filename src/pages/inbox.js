@@ -7,6 +7,7 @@ import {
   View,
   ScrollView,
 } from 'react-native';
+import TextTip from '../components/textTip';
 import Mail from '../components/mail';
 import mutilcheckIcon from '../static/multicheck.png';
 import deleteIcon from '../static/delete.png';
@@ -48,19 +49,23 @@ class Inbox extends React.Component {
           </TouchableOpacity>
         </View>
         <ScrollView>
-          {props.mails.map((mail, index) => (
-            <Mail
-              title={mail.title}
-              date={mail.time}
-              from={mail.from_user}
-              content={mail.content}
-              key={index}
-              index={index}
-              check={mail.check}
-              navigate={props.navigation.navigate}
-              send={false}
-            />
-          ))}
+          {props.mails.length === 0 ? (
+            <TextTip value="您的收件箱暂时为空" />
+          ) : (
+            props.mails.map((mail, index) => (
+              <Mail
+                title={mail.title}
+                date={mail.time}
+                from={mail.from_user}
+                content={mail.content}
+                key={index}
+                index={index}
+                check={mail.check}
+                navigate={props.navigation.navigate}
+                send={false}
+              />
+            ))
+          )}
         </ScrollView>
         {props.multicheck ? (
           <TouchableOpacity
