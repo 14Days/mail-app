@@ -1,3 +1,9 @@
-import Main from './Main';
+import main from './main';
+import inbox from './inbox';
+import user from './user';
+import mail from './mail';
+import admin from './admin';
 
-export default [Main];
+export default [main, inbox, user, mail, admin];
+
+export const modelName = ['inbox', 'user', 'mail', 'admin'];
